@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="kk">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Schedule Pro</title>
-    <style>
+    <title>Smart Schedule Offline Pro</title>
+<style>
         :root {
             --bg-color: #0d1117;
             --accent-indigo: #5c6aff;
@@ -14,7 +14,12 @@
             --text-muted: rgba(255, 255, 255, 0.5);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -25,10 +30,16 @@
             flex-direction: column;
             align-items: center;
             padding: 16px;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
-        .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
         .glass {
             background: var(--glass-bg);
@@ -38,89 +49,207 @@
             border-radius: 24px;
         }
 
-        /* Update Banner */
+        /* --- UPDATE UI STYLES --- */
         #update-banner {
             display: none;
-            padding: 15px;
-            background: linear-gradient(90deg, #5c6aff, #4338ca);
+            padding: 16px;
+            background: var(--accent-indigo);
             border-radius: 20px;
-            margin-bottom: 10px;
             justify-content: space-between;
             align-items: center;
-            animation: slideIn 0.5s ease;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 20px rgba(92, 106, 255, 0.2);
         }
 
-        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .update-btn {
-            background: white; color: #5c6aff; border: none; padding: 8px 16px;
-            border-radius: 12px; font-weight: 800; font-size: 12px; cursor: pointer;
+        .upd-btn {
+            background: white;
+            color: black;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
         }
 
-        /* Progress Overlay */
         #install-overlay {
-            display: none; position: fixed; inset: 0; background: var(--bg-color);
-            z-index: 1000; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--bg-color);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .loader {
-            width: 80px; height: 80px; border: 8px solid var(--glass-border);
-            border-top: 8px solid var(--accent-indigo); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
+            width: 60px;
+            height: 60px;
+            border: 6px solid var(--glass-border);
+            border-top: 6px solid var(--accent-indigo);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Кесте элементтері */
-        .hero-card { padding: 24px; text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); }
-        .timer-display { font-size: 48px; font-weight: 900; margin: 10px 0; font-variant-numeric: tabular-nums; }
-
-        .tabs { display: flex; padding: 6px; gap: 8px; }
-        .tab-btn {
-            flex: 1; padding: 12px; border: none; background: transparent;
-            color: var(--text-muted); font-size: 11px; font-weight: 800; border-radius: 16px;
+        .timer-val {
+            font-size: 64px;
+            font-weight: 900;
+            color: var(--accent-indigo);
+            margin-top: 20px;
         }
-        .tab-btn.active { background: var(--accent-indigo); color: white; }
+        /* ------------------------ */
 
-        .list-item { padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;}
+        .hero-card {
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .day-label {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            font-weight: 900;
+            color: var(--accent-indigo);
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        .lesson-name {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 8px 0;
+        }
+
+        .timer-display {
+            font-size: 48px;
+            font-weight: 900;
+            color: #fff;
+            margin: 10px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tabs {
+            display: flex;
+            padding: 6px;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 800;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-indigo);
+            color: white;
+            box-shadow: 0 8px 16px rgba(92, 106, 255, 0.3);
+        }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .list-item {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-num {
+            font-size: 9px;
+            font-weight: 900;
+            color: var(--accent-indigo);
+            text-transform: uppercase;
+        }
+
+        .item-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .time-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 6px 10px;
+            border-radius: 10px;
+        }
+
+        .weekly-day-title {
+            font-size: 11px;
+            font-weight: 900;
+            color: var(--accent-indigo);
+            margin: 15px 0 10px 10px;
+            text-transform: uppercase;
+        }
+
         .hidden { display: none; }
-    </style>
-</head>
-<body>
+</style>
+  </head>
+  <body>
 
     <div id="update-banner" class="container">
-        <span style="font-size: 13px; font-weight: bold;">Жаңа нұсқа дайын!</span>
-        <button class="update-btn" onclick="startUpdate()">ЖАҢАРТУ</button>
+        <span style="font-weight: bold; font-size: 13px;">Жаңа нұсқа дайын!</span>
+        <button class="upd-btn" onclick="startUpdate()">ЖАҢАРТУ</button>
     </div>
 
     <div id="install-overlay">
-        <div id="loader-icon" class="loader"></div>
-        <h2 id="install-title" style="font-weight: 900; letter-spacing: 1px;">ЖАҢАРТУ ЖҮКТЕЛУДЕ...</h2>
-        <p id="install-desc" style="color: var(--text-muted); margin-top: 10px;">Файлдарды өңдеудеміз, күте тұрыңыз</p>
-        <div id="countdown-circle" style="font-size: 64px; font-weight: 900; color: var(--accent-indigo); margin-top: 20px; display: none;">10</div>
+        <div id="loader-circle" class="loader"></div>
+        <h2 id="install-title" style="margin-top: 20px; font-weight: 900;">ЖҮКТЕЛУДЕ...</h2>
+        <p id="install-desc" style="opacity: 0.5; margin-top: 10px;">Файлдарды жаңартып жатырмыз</p>
+        <div id="countdown-timer" class="timer-val hidden">10</div>
     </div>
 
-    <div class="container">
-        <div class="glass hero-card">
-            <div id="hero-day" style="font-size: 10px; font-weight: 800; color: var(--text-muted);">ДҮЙСЕНБІ</div>
-            <div id="hero-status" style="color: var(--accent-indigo); font-weight: 900; margin-top: 5px;">ЖҮКТЕЛУДЕ</div>
-            <div id="hero-lesson" style="font-size: 24px; font-weight: 800; margin: 10px 0;">---</div>
-            <div id="hero-timer" class="timer-display">00:00:00</div>
-        </div>
+	<div class="container">
+	  <div class="glass hero-card">
+        <div id="hero-day" class="day-label">ЖҮКТЕЛУДЕ...</div>
+        <div id="hero-status" class="status-badge">АНЫҚТАЛУДА</div>
+        <div id="hero-lesson" class="lesson-name">---</div>
+        <div id="hero-timer" class="timer-display">00:00:00</div>
+        <div class="day-label" style="font-size: 8px;">АЯҚТАЛУЫНА ҚАЛДЫ</div>
+	  </div>
 
-        <div class="glass tabs">
-            <button id="btn-today" class="tab-btn active" onclick="showView('today')">БҮГІН</button>
-            <button id="btn-bells" class="tab-btn" onclick="showView('bells')">ЗВОНОКТАР</button>
-            <button id="btn-all" class="tab-btn" onclick="showView('all')">АПТАЛЫҚ</button>
-        </div>
+	  <div class="glass tabs">
+        <button id="btn-today" class="tab-btn active" onclick="showView('today')">БҮГІН</button>
+        <button id="btn-bells" class="tab-btn" onclick="showView('bells')">ЗВОНОКТАР</button>
+        <button id="btn-all" class="tab-btn" onclick="showView('all')">АПТАЛЫҚ</button>
+	  </div>
 
-        <div id="view-today"></div>
-        <div id="view-bells" class="hidden"></div>
-        <div id="view-all" class="hidden"></div>
-    </div>
+	  <div id="view-today" class="content-area"></div>
+	  <div id="view-bells" class="content-area hidden"></div>
+	  <div id="view-all" class="content-area hidden"></div>
+	</div>
 
 <script>
-    /* Жаңарту функциялары */
+    // --- UPDATE FUNCTIONS ---
     function showUpdateBanner() {
         document.getElementById('update-banner').style.display = 'flex';
     }
@@ -128,69 +257,176 @@
     function startUpdate() {
         document.getElementById('update-banner').style.display = 'none';
         document.getElementById('install-overlay').style.display = 'flex';
-        // Java-дағы жүктеуді бастау
+        // Java-дағы startUpdate() функциясын шақыру
         Android.startUpdate();
     }
 
-    // Бұл функцияны Java орындайды (DownloadTask біткенде)
+    // Жүктеу біткенде Java осы функцияны шақырады
     function startFinishCountdown() {
-        document.getElementById('loader-icon').style.display = 'none';
+        document.getElementById('loader-circle').style.display = 'none';
         document.getElementById('install-title').innerText = "ЖАҢАРТУ ОРНАТЫЛДЫ";
-        document.getElementById('install-desc').innerText = "Қосымша 10 секундтан соң қайта қосылады";
+        document.getElementById('install-desc').innerText = "Қосымша 10 секундтан соң қайта жүктеледі";
         
-        const counterEl = document.getElementById('countdown-circle');
-        counterEl.style.display = 'block';
+        const timerEl = document.getElementById('countdown-timer');
+        timerEl.classList.remove('hidden');
         
-        let timeLeft = 10;
-        const timer = setInterval(() => {
-            timeLeft--;
-            counterEl.innerText = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(timer);
+        let seconds = 10;
+        const interval = setInterval(() => {
+            seconds--;
+            timerEl.innerText = seconds;
+            if (seconds <= 0) {
+                clearInterval(interval);
                 location.reload(); // Жаңа файлды жүктеу
             }
         }, 1000);
     }
+    // ------------------------
 
-    /* Кесте логикасы (Бұрынғы код) */
-    const schedule = [[], ["Қазақ тілі", "Алгебра", "Физика", "Орыс тілі", "Информатика", "Қаз. тарихы", "Дене шынықтыру"], ["Ағылшын тілі", "Геометрия", "Д.тарихы", "Қаз. әдебиеті", "Химия", "Жаһандық құзірет", "АӘД"], ["Физика", "Биология", "Қазақ тілі", "Қаз. тарихы", "Құқық", "Ағылшын тілі", "Сынып сағаты"], ["Алгебра", "Қаз. әдебиеті", "Д.тарихы", "Биология", "Орыс тілі", "Таңдау", "Дене шынықтыру"], ["Ағылшын тілі", "Химия", "Алгебра", "Қаз. әдебиеті", "Дене шынықтыру", "География", "Таңдау"], []];
+    const schedule = [
+        [], // Жексенбі
+        ["Қазақ тілі", "Алгебра", "Физика", "Орыс тілі", "Информатика", "Қазақстан тарихы", "Дене шынықтыру"],
+        ["Ағылшын тілі", "Геометрия", "Дүниежүзі тарихы", "Қазақ әдебиеті", "Химия", "Жаһандық құзірет", "АӘД"],
+        ["Физика", "Биология", "Қазақ тілі", "Қазақстан тарихы", "Құқық", "Ағылшын тілі", "Сынып сағаты"],
+        ["Алгебра", "Қазақ әдебиеті", "Дүниежүзі тарихы", "Биология", "Орыс тілі", "Таңдау пәні", "Дене шынықтыру"],
+        ["Ағылшын тілі", "Химия", "Алгебра", "Қазақ әдебиеті", "Дене шынықтыру", "География", "Таңдау пәні"],
+        [] // Сенбі
+    ];
+
     const dayNames = ["ЖЕКСЕНБІ", "ДҮЙСЕНБІ", "СЕЙСЕНБІ", "СӘРСЕНБІ", "БЕЙСЕНБІ", "ЖҰМА", "СЕНБІ"];
-    const starts = [480, 525, 580, 635, 680, 725, 770], ends = [520, 565, 620, 675, 720, 765, 810];
+    const starts = [480, 525, 580, 635, 680, 725, 770]; 
+    const ends = [520, 565, 620, 675, 720, 765, 810];
+
+    function formatTimeLabel(min) {
+        const h = Math.floor(min / 60);
+        const m = min % 60;
+        return h + ":" + m.toString().padStart(2, '0');
+    }
 
     function updateApp() {
         const now = new Date();
-        const d = now.getDay(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
-        const totalSec = (h * 3600) + (m * 60) + s;
-        let day = h >= 18 ? (d + 1) % 7 : d;
-        document.getElementById('hero-day').innerText = (h >= 18 ? "ЕРТЕҢ: " : "") + dayNames[day];
-        // ... (Таймер мен кестені шығару логикасы осында қалады)
-        renderToday(day);
+        const d = now.getDay();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        const s = now.getSeconds();
+        const currentSec = (h * 3600) + (m * 60) + s;
+
+        let activeDay = d;
+        if (h >= 18) activeDay = (d + 1) % 7;
+
+        document.getElementById('hero-day').innerText = (h >= 18 ? "ЕРТЕҢ: " : "") + dayNames[activeDay];
+
+        let status = "ДЕМ АЛЫС";
+        let lesson = "САБАҚ ЖОҚ";
+        let timer = "00:00:00";
+
+        if (activeDay >= 1 && activeDay <= 5) {
+            const list = schedule[activeDay];
+            const startLimit = starts[0] * 60;
+            const endLimit = ends[6] * 60;
+
+            if (currentSec < startLimit && h < 18) {
+                status = "КҮТІҢІЗ";
+                lesson = "1-ШІ: " + list[0];
+                timer = formatDiff(startLimit - currentSec);
+            } else if (currentSec > endLimit && h < 18) {
+                status = "АЯҚТАЛДЫ";
+                lesson = "ҮЙГЕ ҚАЙТУ";
+                timer = "✓";
+            } else if (h >= 18) {
+                status = "ДАЙЫНДЫҚ";
+                lesson = "ЕРТЕҢ: " + list[0];
+                timer = "КЕШ ЖАРЫҚ";
+            } else {
+                for (let i = 0; i < 7; i++) {
+                    let s_time = starts[i] * 60;
+                    let e_time = ends[i] * 60;
+                    if (currentSec >= s_time && currentSec <= e_time) {
+                        status = (i + 1) + "-ШІ САБАҚ";
+                        lesson = list[i];
+                        timer = formatDiff(e_time - currentSec);
+                        break;
+                    }
+                    if (i < 6 && currentSec > e_time && currentSec < (starts[i+1] * 60)) {
+                        status = "ҮЗІЛІС";
+                        lesson = "КЕЛЕСІ: " + list[i+1];
+                        timer = formatDiff((starts[i+1] * 60) - currentSec);
+                        break;
+                    }
+                }
+            }
+        }
+
+        document.getElementById('hero-status').innerText = status;
+        document.getElementById('hero-lesson').innerText = lesson;
+        document.getElementById('hero-timer').innerText = timer;
+
+        renderToday(activeDay);
+    }
+
+    function formatDiff(sec) {
+        const hh = Math.floor(sec / 3600);
+        const mm = Math.floor((sec % 3600) / 60);
+        const ss = sec % 60;
+        return (hh > 0 ? hh + ":" : "") + mm.toString().padStart(2, '0') + ":" + ss.toString().padStart(2, '0');
     }
 
     function renderToday(dayIdx) {
         const container = document.getElementById('view-today');
         const list = schedule[dayIdx];
-        if (!list || list.length === 0) { container.innerHTML = `<div class="glass list-item" style="justify-content:center; opacity:0.4">Сабақ жоқ</div>`; return; }
+        if (!list || list.length === 0) {
+            container.innerHTML = `<div class="glass list-item" style="justify-content:center; opacity:0.5">Сабақ жоқ</div>`;
+            return;
+        }
         container.innerHTML = list.map((name, i) => `
             <div class="glass list-item">
-                <div style="display:flex; flex-direction:column">
-                    <span style="font-size:9px; font-weight:900; color:var(--accent-indigo)">${i+1}-САБАҚ</span>
-                    <span style="font-size:14px; font-weight:700">${name}</span>
+                <div class="item-info">
+                    <span class="item-num">${i+1}-САБАҚ</span>
+                    <span class="item-title">${name}</span>
                 </div>
-                <span style="font-size:11px; font-weight:700; background:rgba(255,255,255,0.05); padding:6px 10px; border-radius:10px; color:var(--text-muted)">${Math.floor(starts[i]/60)}:00</span>
+                <span class="time-badge">${formatTimeLabel(starts[i])}</span>
             </div>
         `).join('');
     }
 
-    function showView(view) {
-        ['today', 'bells', 'all'].forEach(v => {
-            document.getElementById('view-' + v)?.classList.toggle('hidden', v !== view);
-            document.getElementById('btn-' + v)?.classList.toggle('active', v === view);
-        });
+    function renderBells() {
+        const container = document.getElementById('view-bells');
+        container.innerHTML = starts.map((s, i) => `
+            <div class="glass list-item">
+                <span class="item-title">${i+1}-сабақ</span>
+                <span class="time-badge" style="color:var(--accent-indigo)">${formatTimeLabel(s)} — ${formatTimeLabel(ends[i])}</span>
+            </div>
+        `).join('');
     }
 
+    function renderWeekly() {
+        const container = document.getElementById('view-all');
+        let html = "";
+        for(let d=1; d<=5; d++) {
+            html += `<div class="weekly-day-title">${dayNames[d]}</div>`;
+            html += schedule[d].map((name, i) => `
+                <div class="glass list-item" style="margin-bottom:8px">
+                    <span class="item-title">${i+1}. ${name}</span>
+                </div>
+            `).join('');
+        }
+        container.innerHTML = html;
+    }
+
+    function showView(view) {
+        document.getElementById('view-today').classList.add('hidden');
+        document.getElementById('view-bells').classList.add('hidden');
+        document.getElementById('view-all').classList.add('hidden');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+        document.getElementById('view-' + view).classList.remove('hidden');
+        document.getElementById('btn-' + view).classList.add('active');
+    }
+
+    renderBells();
+    renderWeekly();
     setInterval(updateApp, 1000);
     updateApp();
 </script>
-</body>
+
+  </body>
 </html>
