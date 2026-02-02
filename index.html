@@ -249,7 +249,6 @@
 	</div>
 
 <script>
-    // --- UPDATE FUNCTIONS ---
     function showUpdateBanner() {
         document.getElementById('update-banner').style.display = 'flex';
     }
@@ -257,29 +256,32 @@
     function startUpdate() {
         document.getElementById('update-banner').style.display = 'none';
         document.getElementById('install-overlay').style.display = 'flex';
-        // Java-дағы startUpdate() функциясын шақыру
         Android.startUpdate();
     }
 
-    // Жүктеу біткенде Java осы функцияны шақырады
     function startFinishCountdown() {
         document.getElementById('loader-circle').style.display = 'none';
         document.getElementById('install-title').innerText = "ЖАҢАРТУ ОРНАТЫЛДЫ";
-        document.getElementById('install-desc').innerText = "Қосымша 10 секундтан соң қайта жүктеледі";
+        document.getElementById('install-desc').innerText = "Дайын болыңыз...";
         
         const timerEl = document.getElementById('countdown-timer');
         timerEl.classList.remove('hidden');
         
         let seconds = 10;
-        const interval = setInterval(() => {
+        timerEl.innerText = seconds;
+
+        const interval = setInterval(function() {
             seconds--;
             timerEl.innerText = seconds;
+            
             if (seconds <= 0) {
                 clearInterval(interval);
-                location.reload(); // Жаңа файлды жүктеу
+                // Таймер біткенде Java-ға бетті жаңартуды бұйырамыз
+                Android.reloadApp();
             }
         }, 1000);
     }
+    
     // ------------------------
 
     const schedule = [
@@ -429,4 +431,4 @@
 </script>
 
   </body>
-</html>
+	</html>
